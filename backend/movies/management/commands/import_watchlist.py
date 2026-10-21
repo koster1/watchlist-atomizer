@@ -20,14 +20,26 @@ class Command(BaseCommand):
             action="store_true",
             help="Test the import without saving to the database.",
         )
+        
+        # Allow a custom CSV path for tests and other imports.
+        
+        parser.add_argument(
+            "--file",
+            type=str,
+            default=None,
+            help="Path to the CSV file to import.",
+        )
+
     
     def handle(self, *args, **options):
-        # Locate the CSV file in the project root directory
-        
-        csv_path = Path(__file__).resolve().parents[4] / "watchlist.csv"
+
+        # Use the supplied file, or default to the project root CSV.
+        if options["file"]:
+            csv_path = Path(options["file"])
+        else:
+            csv_path = Path(__file__).resolve().parents[4] / "watchlist.csv" 
         
         #Checking that the CSV file exists
-        
         if not csv_path.exists():
             raise CommandError(f"CSV file not found at {csv_path}")
         
