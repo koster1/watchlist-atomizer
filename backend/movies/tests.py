@@ -131,6 +131,23 @@ class ImportWatchlistTestCase(TestCase):
         self.assertEqual(film.year, 2000)
         self.assertEqual(film.date_added.isoformat(), "2024-01-01")
         
+    def test_import_film_with_future_year(self):
+        # Test that future release years are accepted.
+        
+        csv_content = (
+            "Date,Name,Year,Letterboxd URI\n"
+            "2026-10-01,Future Film, 2030,"
+            "https://letterboxd.com/film/future-film/\n"
+        )
+        
+        with tempfile.TemporaryDirectory() as temp_dir:
+            csv_path = Path(temp_dir) / "watchlist.csv"
+            csv_path.write_text(csv_content, encoding="utf-8")
+            
+            call_command("import_watchlist", file=str(csv_path))
+            
+        film = Film.objects.get(title="Future Film")
+        self.assertEqual(film.year, 2030)
     
     def test_skips_existing_film(self):
         """

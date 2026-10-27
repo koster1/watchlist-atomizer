@@ -88,7 +88,7 @@ class Command(BaseCommand):
                 
                 try: 
                     year = int(year_value)
-                    if year < 1874 or year > date.today().year:
+                    if year < 1874:
                         raise ValueError
                     
                 except ValueError:

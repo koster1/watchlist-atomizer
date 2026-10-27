@@ -16,6 +16,7 @@ class FilmSerializer(serializers.ModelSerializer):
         "id",
         "title",
         "year",
+        "release_date",
         "letterboxd_url",
         "date_added",
         "director",
