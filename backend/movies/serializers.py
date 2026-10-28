@@ -14,6 +14,7 @@ class FilmSerializer(serializers.ModelSerializer):
         model = Film
         fields = [
         "id",
+        "tmdb_id"
         "title",
         "year",
         "release_date",
