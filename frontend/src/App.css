@@ -1,10 +1,18 @@
 
-#root {
-  width: 100%;
-  min-height: 100vh;
-  margin: 0 auto;
+:root {
+  /* Typography */
+  --font-family: 'Courier New', monospace;
+
+  /* Colors */
+  --color-background: #131111;
+  --color-surface: #20232b;
+  --color-text: #f1f1f1;
+  --color-text-muted: #aeb3bd;
+  --color-accent: #d6a84b;
+  --color-border: #454954;
 }
 
+/* Global styles */
 * {
   box-sizing: border-box;
 }
@@ -12,22 +20,33 @@
 body {
   margin: 0;
   min-width: 320px;
-  background: #131111;
-  color: #f1f1f1;
-  font-family: Helvetica;
+  min-height: 100vh;
+  background: var(--color-background);
+  color: var(--color-text);
+  font-family: var(--font-family);
 }
 
 button,
-select {
+input,
+select,
+textarea {
   font: inherit;
 }
 
+#root {
+  width: 100%;
+  min-height: 100vh;
+  margin: 0 auto;
+}
+
+/* Main application layout */
 .app {
   width: min(1400px, 100%);
   margin: 0 auto;
   padding: 32px;
 }
 
+/* Header and navigation */
 header {
   display: flex;
   justify-content: space-between;
@@ -50,24 +69,27 @@ nav {
 nav button,
 .primary-button {
   padding: 10px 18px;
-  border: 1px solid #454954;
+  border: 1px solid var(--color-border);
   border-radius: 6px;
-  background: #20232b;
-  color: #000000;
+  background: var(--color-surface);
+  color: var(--color-text);
   cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
 }
 
 nav button:hover,
 .primary-button:hover {
-  background: #f1f1f1;
+  background: var(--color-text);
+  color: var(--color-background);
 }
 
 nav button.active {
-  background: #d6a84b;
-  border-color: #d6a84b;
-  color: #111318;
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-background);
 }
 
+/* Home page */
 .home-page {
   padding: 80px 0;
 }
@@ -78,10 +100,11 @@ nav button.active {
 }
 
 .home-page p {
-  color: #aeb3bd;
+  color: var(--color-text-muted);
   font-size: 18px;
 }
 
+/* Library toolbar */
 .library-toolbar {
   display: flex;
   justify-content: space-between;
@@ -92,12 +115,13 @@ nav button.active {
 
 .library-toolbar select {
   padding: 10px 14px;
-  border: 1px solid #f1f1f1;
+  border: 1px solid var(--color-border);
   border-radius: 6px;
-  background: #f1f1f1;
-  color: #000000;
+  background: var(--color-text);
+  color: var(--color-background);
 }
 
+/* Film grid */
 .film-grid {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -116,8 +140,8 @@ nav button.active {
   justify-content: center;
   padding: 12px;
   border-radius: 6px;
-  background: #f1f1f1;
-  color: #000000;
+  background: var(--color-text);
+  color: var(--color-background);
   text-align: center;
 }
 
@@ -128,10 +152,11 @@ nav button.active {
 
 .film-card p {
   margin: 0;
-  color: #6a7892;
+  color: var(--color-text-muted);
   font-size: 13px;
 }
 
+/* Pagination */
 .pagination {
   display: flex;
   justify-content: center;
@@ -142,10 +167,10 @@ nav button.active {
 
 .pagination button {
   padding: 9px 14px;
-  border: 1px solid #7f7f7f;
+  border: 1px solid var(--color-border);
   border-radius: 6px;
-  background: #F1F1F1;
-  color: #000000;
+  background: var(--color-text);
+  color: var(--color-background);
   cursor: pointer;
 }
 
@@ -154,6 +179,7 @@ nav button.active {
   cursor: not-allowed;
 }
 
+/* Responsive layout */
 @media (max-width: 800px) {
   .app {
     padding: 20px;
@@ -176,34 +202,31 @@ nav button.active {
   }
 }
 
-/* Vierityspalkki / Scrollbar */
+/* Scrollbar */
+
+/* Custom scrollbar */
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 8px;
+  height: 8px;
+  background: #131111;
 }
 
 ::-webkit-scrollbar-track {
-  background: #000000;
+  background: #131111;
+  border: none;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #060606;
+  background: #454545;
+  border: none;
   border-radius: 10px;
-  border: 2px solid #2a5fff;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #d6a84b;
+  background: #777777;
 }
 
 /* Firefox */
 * {
-  scrollbar-color: #969595 #4e4e4e;
-}
-
-h1
-  {
-    color: #ffffff;
-  }
-h2 {
-  color: #ffffff;
+  scrollbar-color: #454545 #131111;
 }
