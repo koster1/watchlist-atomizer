@@ -70,7 +70,7 @@ def tmdb_movie_save(request):
         film, created = save_movie_from_tmdb(movie_id)
     except Exception:
         return Response(
-            {"error", "Could not save the movie from TMDB."},
+            {"error": "Could not save the movie from TMDB."},
             status=502
         )                 
         
