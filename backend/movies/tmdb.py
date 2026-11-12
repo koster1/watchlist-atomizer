@@ -1,4 +1,7 @@
 
+"""
+This module requests movie data from The Movie Database (TMDB) API and saves it to the Django database.
+"""
 import json
 import os
 import urllib.parse
@@ -6,23 +9,25 @@ import urllib.request
 
 from .models import Film, FilmRelease, Director
 
-"""
-This module requests movie data from The Movie Database (TMDB) API and saves it to the Django database.
-"""
-
-
 
 TMDB_API_BASE_URL = "https://api.themoviedb.org/3"
 
+def get_tmdb_api_key():
+    
+    # Return the TMDB API key.
+    
+    api_key = os.getenv("TMDB_API_KEY")
+    
+    if not api_key:
+        raise RuntimeError("TMDB_API_KEY is missing.")
+    
+    return api_key
 
 def search_movies(query):
     """Search for movies in TMDB. / Hae elokuvia TMDB:stä."""
-
-    api_key = os.getenv("TMDB_API_KEY")
-
-    if not api_key:
-        raise RuntimeError("TMDB_API_KEY is missing.")
-
+    
+    api_key = get_tmdb_api_key()
+    
     params = urllib.parse.urlencode({
         "api_key": api_key,
         "query": query,
@@ -39,29 +44,36 @@ def find_exact_tmdb_match(title, year):
     # Find a movie in TMDB that's matching the exact title and release year
     
     results = search_movies(title)
+    possible_matches = []
     
     for movie in results.get("results", []):
         tmdb_title = movie.get("title", "").strip()
+        original_title = movie.get("original_title", "").strip()
         release_date = movie.get("release_date", "")
         
         if not release_date:
             continue
         
-        tmdb_year = int(release_date[:4])
+        movie_year = int(release_date[:4])
         
-        if tmdb_title.casefold() == title.strip().casefold() and tmdb_year == year:
-            return movie
+        title_matches = title.strip().casefold() in {
+            tmdb_title.casefold(),
+            original_title.casefold()
+        }
         
+        if title_matches and abs(movie_year - year) <= 1:
+            possible_matches.append(movie)
+            
+    if len(possible_matches) == 1:
+        return possible_matches[0]
+
     return None
 
 def get_theatrical_release_date_by_country(movie_id, country_code):
     """
     Get the theatrical release date for a movie by country code from TMDB.
     """
-    api_key = os.getenv("TMDB_API_KEY")
-    
-    if not api_key:
-        raise RuntimeError("TMDB_API_KEY is missing.")
+    api_key = get_tmdb_api_key()
     
     params = urllib.parse.urlencode({
         "api_key": api_key,
@@ -82,10 +94,7 @@ def get_theatrical_release_date_by_country(movie_id, country_code):
 
 def get_movie_details(movie_id):
     
-    api_key = os.getenv("TMDB_API_KEY")
-    
-    if not api_key:
-        raise RuntimeError("TMDB_API_KEY is missing.")
+    api_key = get_tmdb_api_key()
     
     params = urllib.parse.urlencode({
         "api_key": api_key,
@@ -98,11 +107,10 @@ def get_movie_details(movie_id):
         return json.loads(response.read().decode("utf-8"))
     
 def get_movie_directors(movie_id):
-    # Get the directors of a movie from TMDB.
-    api_key = os.getenv("TMDB_API_KEY")
     
-    if not api_key:
-        raise RuntimeError("TMDB_API_KEY is missing.")
+    # Get the directors of a movie from TMDB.
+    
+    api_key = get_tmdb_api_key()
     
     params = urllib.parse.urlencode({
         "api_key": api_key,
@@ -198,11 +206,8 @@ def save_movie_releases_by_country(film):
     
     if not film.tmdb_id:
         raise ValueError("Film does not have a TMDB ID.")
-    
-    api_key = os.getenv("TMDB_API_KEY")
-    
-    if not api_key:
-        raise RuntimeError("TMDB_API_KEY is missing.")
+
+    api_key = get_tmdb_api_key()
     
     params = urllib.parse.urlencode({
         "api_key": api_key,

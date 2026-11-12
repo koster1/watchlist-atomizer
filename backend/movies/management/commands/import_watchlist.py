@@ -128,7 +128,6 @@ class Command(BaseCommand):
                         year=year,
                         letterboxd_url=letterboxd_url,
                         date_added=date_added,
-                        director="",
                     )
                     imported += 1
                 
