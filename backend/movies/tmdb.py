@@ -188,12 +188,8 @@ def update_film_from_tmdb(film, movie_id):
     release_date = movie_data.get("release_date") or None
     
     film.tmdb_id = movie_id
-    film.title = movie_data["title"]
     film.release_date = release_date
-    
-    if release_date:
-        film.year = int(release_date[:4])
-        
+
     film.save()
     
     save_movie_directors(film)
